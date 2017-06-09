@@ -15,6 +15,7 @@ class CaseGenerator(private val random: Random = Random()) {
     fun generate(nRange: IntRange, probability: Int): String {
         val n = nRange.first + random.nextInt(nRange.count())
         val result = StringBuilder()
+        result.appendln(n)
 
         (1..n).forEach {
             var flag = true
