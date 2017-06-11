@@ -67,10 +67,10 @@ fun runTest(nRange: IntRange = 1..20, probability: Int = 5) {
             val time = runResult.nanoTime / (1000.0 * 1000.0)
             maxTime = maxOf(maxTime, time)
             totalMilliSeconds += time.toLong()
-            val output = runResult.output
-            if (output[0].toString().trim() == "YES") {
+            val output = runResult.output.split('\n').map { it.trim() }
+            if (output[0] == "YES") {
                 totalYesCount++
-                val m = runResult.output[0].toString().trim().toInt()
+                val m = output[1].trim().toInt()
                 maxM = maxOf(maxM, m)
                 totalM += m
             }
@@ -79,7 +79,7 @@ fun runTest(nRange: IntRange = 1..20, probability: Int = 5) {
                 val mAverage = if (totalYesCount == 0) {
                     "NaN"
                 } else {
-                    totalM / totalYesCount
+                    (totalM / totalYesCount).toString()
                 }
                 println("$totalCount cases passed.\n" +
                         "time(ave.):${time / totalCount}ms\n" +
