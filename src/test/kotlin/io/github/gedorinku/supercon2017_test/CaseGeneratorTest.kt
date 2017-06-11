@@ -12,7 +12,7 @@ class CaseGeneratorTest {
         val random = Random()
         val generator = CaseGenerator(random)
         val range = 1..2000
-        val numOfCases = 50000
+        val numOfCases = 10000
 
         (1..numOfCases).forEach {
             if (it % 1000 == 0) {

@@ -1,6 +1,7 @@
 package io.github.gedorinku.supercon2017_test
 
 import java.io.File
+import java.io.PrintStream
 import java.time.LocalDateTime
 
 /**
@@ -75,27 +76,22 @@ fun runTest(nRange: IntRange = 1..20, probability: Int = 5) {
             }
 
             if (totalCount % 100 == 0) {
+                val mAverage = if (totalYesCount == 0) {
+                    "NaN"
+                } else {
+                    totalM / totalYesCount
+                }
                 println("$totalCount cases passed.\n" +
                         "time(ave.):${time / totalCount}ms\n" +
-                        "m(ave.):${totalM / totalYesCount}  m(max):$maxM\n")
+                        "m(ave.):$mAverage  m(max):$maxM\n")
             }
         }
     } catch (e: Throwable) {
         e.printStackTrace()
-        File("crash-${LocalDateTime.now()}.log").writer().use {
-            it.write("$e\n")
+        File("crash-${LocalDateTime.now()}.log").printWriter().use {
+            e.printStackTrace(it)
         }
     }
-
-    /*val generator = CaseGenerator()
-    val solverRunner = SolverRunner("./a.out")
-    val outputVerifier = TsuyosshiOutputVerifier()
-    val case = generator.generate(nRange, probability)
-    val runResult = solverRunner.run(case)
-    val verifyResult = outputVerifier.verify(case, runResult.output)
-    println(case)
-    println(runResult)
-    println(verifyResult)*/
 }
 
 fun verify() {
