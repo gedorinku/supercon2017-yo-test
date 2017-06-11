@@ -18,7 +18,7 @@
 #include <string.h>
 using namespace std;
 static const int INF = INT_MAX;
-static const int MAX_N = 52;
+static const int MAX_N = 53;
 
 struct AnswerSeed {
 	int x, y;
@@ -31,7 +31,42 @@ int N;
 int answerNum;
 bool isSucces;
 vector<string> testSeed;
+vector<int> AlphaIndex[26][2];
+vector<int> useSeed;
 vector<AnswerSeed> answer;
+
+void SelectSeed() {
+	vector<int> NoSeed[26][2];
+	for (int i = 0; i < 26; ++i) {
+		if ((AlphaIndex[i][0].size() == 0) ^ (AlphaIndex[i][1].size() == 0)) {
+			int UP = (AlphaIndex[i][0].size() == 0) ? 1 : 0;
+			for (auto A : AlphaIndex[i][UP]) {
+				for (int j = 0; j < 26; j++) {
+					for (int k = 0; k < 2; ++k) {
+						NoSeed[j][k].push_back(A);
+					}
+				}
+			}
+		}
+	}
+	for (int i = 0; i < 26; ++i) {
+		for (int j = 0; j < 2; ++j) {
+			for (auto A : AlphaIndex[i][j]) {
+				bool isErase = false;
+				for (auto B : NoSeed[i][j]) {
+					if (A == B) {
+						isErase = true;
+						break;
+					}
+				}
+				if (!isErase)useSeed.push_back(A);
+			}
+		}
+	}
+
+	sort(useSeed.begin(), useSeed.end());
+	useSeed.erase(unique(useSeed.begin(), useSeed.end()), useSeed.end());
+}
 
 string Merge(string A, string B) {
 	string result;
@@ -92,6 +127,9 @@ bool isVanish(string seed) {
 void ConfirmFormat() {
 	string result;
 	cin >> result;
+	SelectSeed();
+	if (result == "YES" && useSeed.size() == 0)cout << "[[結果はYESではありません。交配は不可能です。]]" << endl;
+	if (result == "NO" && useSeed.size() != 0)cout << "[[結果はNOではありません。交配は可能です。]]" << endl;
 	cin >> answerNum;
 	for (int i = 0; i < answerNum; ++i) {
 		int x, y;
@@ -110,14 +148,16 @@ void ConfirmAnswer() {
 		AnswerSeed ans = answer[i];
 		mergedSeed = Merge(testSeed[ans.x - 1], testSeed[ans.y - 1]);
 		testSeed.push_back(mergedSeed);
+		cout << mergedSeed << " " << ans.seed << endl;
+		cout << (mergedSeed == ans.seed) << endl;
 		if (mergedSeed != ans.seed) {
-			cout << i << "回目の交配結果が正しくありません。" << endl;
-			cout << testSeed[ans.x - 1] << " " << testSeed[ans.y - 1] << "交配結果は" << mergedSeed << "となります。" << endl;
+			cout << "[[" << i + 1 << "回目の交配結果が正しくありません。" << "]]" << endl;
+			cout << "[[" << "交配結果は" << mergedSeed << "となります。" << "]]" << endl;
 			return;
 		}
 	}
 	if (!isVanish(mergedSeed)) {
-		cout << "最終結果が不正です。 [!] を生成できません。" << endl;
+		cout << "[[最終結果が不正です。 [!] を生成できません。]]" << endl;
 	}
 }
 
@@ -127,6 +167,10 @@ int main() {
 		string temp;
 		cin >> temp;
 		testSeed.push_back(temp);
+		for (auto c : temp) {
+			bool UP = islower(c) ? 0 : 1;
+			AlphaIndex[tolower(c) - 'a'][UP].push_back(i);
+		}
 	}
 	ConfirmFormat();
 	ConfirmAnswer();
