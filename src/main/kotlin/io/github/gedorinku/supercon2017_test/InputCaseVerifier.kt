@@ -3,9 +3,9 @@ package io.github.gedorinku.supercon2017_test
 /**
  * Created by gedorinku on 2017/06/09.
  */
-object InputCaseValidChecker {
+object InputCaseVerifier {
 
-    fun checkValid(case: String): Result {
+    fun verify(case: String): Result {
         val lines = case.split('\n').map { it.trim() }
         if (lines.isEmpty()) {
             return Result(false, "空文字列です。")

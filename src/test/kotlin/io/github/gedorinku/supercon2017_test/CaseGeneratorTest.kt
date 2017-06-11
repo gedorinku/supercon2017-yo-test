@@ -20,7 +20,7 @@ class CaseGeneratorTest {
             }
             val probability = random.nextInt(20) + 1
             val case = generator.generate(range, probability)
-            val (isValid, message) = InputCaseValidChecker.checkValid(case)
+            val (isValid, message) = InputCaseVerifier.verify(case)
             assert(isValid) {
                 "$message\n" +
                         "==begin of case==\n" +
