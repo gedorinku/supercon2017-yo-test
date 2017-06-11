@@ -31,6 +31,7 @@ fun runTest(nRange: IntRange = 1..20, probability: Int = 5) {
     var totalYesCount = 0
     var totalM = 0L
     var totalMilliSeconds = 0L
+    var totalMilliSecondsYes = 0L
     var maxTime = 0.0
     var maxM = 0
 
@@ -73,6 +74,7 @@ fun runTest(nRange: IntRange = 1..20, probability: Int = 5) {
                 val m = output[1].trim().toInt()
                 maxM = maxOf(maxM, m)
                 totalM += m
+                totalMilliSecondsYes += runResult.nanoTime / (1000 * 1000)
             }
 
             if (totalCount % 100 == 0) {
@@ -82,7 +84,9 @@ fun runTest(nRange: IntRange = 1..20, probability: Int = 5) {
                     (totalM / totalYesCount).toString()
                 }
                 println("$totalCount cases passed.\n" +
-                        "time(ave.):${time / totalCount}ms\n" +
+                        "time(ave.):${time / totalCount} ms\n" +
+                        "time(max):$maxTime ms\n" +
+                        "time(yes only ave.):${totalMilliSecondsYes / totalYesCount} ms\n" +
                         "m(ave.):$mAverage  m(max):$maxM\n")
             }
         }
