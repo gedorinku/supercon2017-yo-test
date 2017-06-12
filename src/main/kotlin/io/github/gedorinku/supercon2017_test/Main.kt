@@ -83,10 +83,15 @@ fun runTest(nRange: IntRange = 1..20, probability: Int = 5) {
                 } else {
                     (totalM / totalYesCount).toString()
                 }
+                val yesMillisAverage = if (totalYesCount == 0) {
+                    "NaN"
+                } else {
+                    (totalMilliSecondsYes / totalYesCount).toString()
+                }
                 println("$totalCount cases passed.\n" +
                         "time(ave.):${time / totalCount} ms\n" +
                         "time(max):$maxTime ms\n" +
-                        "time(yes only ave.):${totalMilliSecondsYes / totalYesCount} ms\n" +
+                        "time(yes only ave.):$yesMillisAverage ms\n" +
                         "m(ave.):$mAverage  m(max):$maxM\n")
             }
         }
