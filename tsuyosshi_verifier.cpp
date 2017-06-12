@@ -36,34 +36,37 @@ vector<int> useSeed;
 vector<AnswerSeed> answer;
 
 void SelectSeed() {
-	vector<int> NoSeed[26][2];
-	for (int i = 0; i < 26; ++i) {
-		if ((AlphaIndex[i][0].size() == 0) ^ (AlphaIndex[i][1].size() == 0)) {
-			int UP = (AlphaIndex[i][0].size() == 0) ? 1 : 0;
-			for (auto A : AlphaIndex[i][UP]) {
-				for (int j = 0; j < 26; j++) {
-					for (int k = 0; k < 2; ++k) {
-						NoSeed[j][k].push_back(A);
+	bool flag[26][2] = { false };
+	while (1) {
+		bool isChanged = false;
+		for (int i = 0; i < 26; ++i) {
+			if ((AlphaIndex[i][0].size() == 0) ^ (AlphaIndex[i][1].size() == 0)) {
+				int UP = (AlphaIndex[i][0].size() == 0) ? 1 : 0;
+				if (flag[i][UP] == true) continue;
+				flag[i][UP] = true;
+				for (auto A : AlphaIndex[i][UP]) {
+					for (auto c : testSeed[A]) {
+						int up = islower(c) ? 0 : 1;
+						int it = find(AlphaIndex[tolower(c) - 'a'][up].begin(), AlphaIndex[tolower(c) - 'a'][up].end(), A) - AlphaIndex[tolower(c) - 'a'][up].begin();
+						if (i == (tolower(c) - 'a') && UP == up)continue;
+						if (it != AlphaIndex[tolower(c) - 'a'][up].size()) {
+							AlphaIndex[tolower(c) - 'a'][up].erase(AlphaIndex[tolower(c) - 'a'][up].begin() + it);
+							isChanged = true;
+						}
 					}
 				}
+				AlphaIndex[i][UP].erase(AlphaIndex[i][UP].begin(), AlphaIndex[i][UP].begin() + AlphaIndex[i][UP].size());
+			}
+		}
+		if (!isChanged)break;
+	}
+	for (int i = 0; i<26; ++i) {
+		for (int j = 0; j<2; ++j) {
+			for (auto a : AlphaIndex[i][j]) {
+				useSeed.push_back(a);
 			}
 		}
 	}
-	for (int i = 0; i < 26; ++i) {
-		for (int j = 0; j < 2; ++j) {
-			for (auto A : AlphaIndex[i][j]) {
-				bool isErase = false;
-				for (auto B : NoSeed[i][j]) {
-					if (A == B) {
-						isErase = true;
-						break;
-					}
-				}
-				if (!isErase)useSeed.push_back(A);
-			}
-		}
-	}
-
 	sort(useSeed.begin(), useSeed.end());
 	useSeed.erase(unique(useSeed.begin(), useSeed.end()), useSeed.end());
 }
@@ -130,6 +133,7 @@ void ConfirmFormat() {
 	SelectSeed();
 	if (result == "YES" && useSeed.size() == 0)cout << "[[結果はYESではありません。交配は不可能です。]]" << endl;
 	if (result == "NO" && useSeed.size() != 0)cout << "[[結果はNOではありません。交配は可能です。]]" << endl;
+	if (result == "NO") return;
 	cin >> answerNum;
 	for (int i = 0; i < answerNum; ++i) {
 		int x, y;
@@ -148,8 +152,6 @@ void ConfirmAnswer() {
 		AnswerSeed ans = answer[i];
 		mergedSeed = Merge(testSeed[ans.x - 1], testSeed[ans.y - 1]);
 		testSeed.push_back(mergedSeed);
-		cout << mergedSeed << " " << ans.seed << endl;
-		cout << (mergedSeed == ans.seed) << endl;
 		if (mergedSeed != ans.seed) {
 			cout << "[[" << i + 1 << "回目の交配結果が正しくありません。" << "]]" << endl;
 			cout << "[[" << "交配結果は" << mergedSeed << "となります。" << "]]" << endl;
