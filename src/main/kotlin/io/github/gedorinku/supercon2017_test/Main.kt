@@ -77,7 +77,7 @@ fun runTest(nRange: IntRange = 1..20, probability: Int = 5) {
                 totalMilliSecondsYes += runResult.nanoTime / (1000 * 1000)
             }
 
-            if (totalCount % 1000 == 0) {
+            if (totalCount % 250 == 0) {
                 val mAverage = if (totalYesCount == 0) {
                     "NaN"
                 } else {
