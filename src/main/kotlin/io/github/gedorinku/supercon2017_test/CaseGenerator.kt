@@ -19,11 +19,12 @@ class CaseGenerator(private val random: Random = Random()) {
 
         (1..n).forEach {
             var flag = true
+            val currentProbability = random.nextInt(probability) + 1
             while (flag) {
                 ('a'..'z').forEach {
                     c ->
                     arrayOf(true, false).forEach {
-                        if (random.nextInt(probability) == 0) {
+                        if (random.nextInt(currentProbability) == 0) {
                             result.append(if (it) {
                                 c
                             } else {
